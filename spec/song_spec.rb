@@ -3,7 +3,7 @@ require 'spec_helper'
 describe '#Song' do
 
   before(:each) do
-    @album = Album.new({:name => "Giant Steps", :id => nil})
+    @album = Album.new({:name => "Giant Steps", :id => nil, :release_year => 2020})
     @album.save()
   end
 
@@ -76,7 +76,7 @@ describe '#Song' do
 
   describe('#delete') do
   it("deletes all songs belonging to a deleted album") do
-    album = Album.new({:name => "A Love Supreme", :id => nil})
+    album = Album.new({:name => "A Love Supreme", :id => nil, :release_year => 2020})
     album.save()
     song = Song.new({:name => "Naima", :album_id => album.id, :id => nil})
     song.save()

@@ -1,10 +1,11 @@
 class Album
-  attr_accessor :name
+  attr_accessor :name, :release_year
   attr_reader :id
 
   def initialize(attributes)
     @name = attributes.fetch(:name)
     @id = attributes.fetch(:id) # Note that this line has been changed.
+    @release_year = attributes.fetch(:release_year)
   end
 
   def self.all
@@ -13,13 +14,14 @@ class Album
   returned_albums.each() do |album|
     name = album.fetch("name")
     id = album.fetch("id").to_i
-    albums.push(Album.new({:name => name, :id => id}))
+    release_year = album.fetch("release_year").to_i
+    albums.push(Album.new({:name => name, :id => id, :release_year => release_year}))
   end
   albums
   end
 
   def save
-    result = DB.exec("INSERT INTO albums (name) VALUES ('#{@name}') RETURNING id;")
+    result = DB.exec("INSERT INTO albums (name, release_year) VALUES ('#{@name}', #{@release_year}) RETURNING id;")
     @id = result.first().fetch("id").to_i
   end
 
@@ -35,7 +37,8 @@ class Album
     album = DB.exec("SELECT * FROM albums WHERE id = #{id};").first
     name = album.fetch("name")
     id = album.fetch("id").to_i
-    Album.new({:name => name, :id => id})
+    release_year = album.fetch("release_year").to_i
+    Album.new({:name => name, :id => id, :release_year => release_year})
   end
 
   def update(name)
