@@ -87,7 +87,7 @@ end
 
   describe('.find_by_album') do
     it("finds songs for an album") do
-      album2 = Album.new({:name => "Blue", :id => nil})
+      album2 = Album.new({:name => "Blue", :id => nil, :release_year => 2020})
       album2.save
       song = Song.new({:name => "Naima", :album_id => @album.id, :id => nil})
       song.save()
