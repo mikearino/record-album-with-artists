@@ -56,6 +56,17 @@ describe '#Album' do
     end
   end
 
+  describe('#update_artist') do
+  it("adds an artist to an album") do
+    artist = Artist.new({:name => "John Coltrane", :id => nil})
+    artist.save()
+    album = Album.new({:name => "A Love Supreme", :id => nil, :release_year => 2020})
+    album.save()
+    album.update_artist({:artist_name => "John Coltrane"})
+    expect(album.artists).to(eq([artist]))
+  end
+end
+
   describe('#delete') do
     it("deletes an album by id") do
       album = Album.new({:name => "A Love Supreme", :id => nil, :release_year => 2020})

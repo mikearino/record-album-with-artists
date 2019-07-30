@@ -46,6 +46,20 @@ class Album
     DB.exec("UPDATE albums SET name = '#{@name}' WHERE id = #{@id};")
   end
 
+  def update_artist(attributes)
+    if (attributes.has_key?(:name)) && (attributes.fetch(:name) != nil)
+      @name = attributes.fetch(:name)
+      DB.exec("UPDATE albums SET name = '#{@name}' WHERE id = #{@id};")
+    end
+    artist_name = attributes.fetch(:artist_name)
+    if artist_name != nil
+      artist = DB.exec("SELECT * FROM artists WHERE lower(name)='#{artist_name.downcase}';").first
+      if artist != nil
+        DB.exec("INSERT INTO albums_artists (album_id, artist_id) VALUES (#{@id}, #{artist['id'].to_i});")
+      end
+    end
+  end
+
   def delete
     DB.exec("DELETE FROM albums WHERE id = #{@id};")
     DB.exec("DELETE FROM songs WHERE album_id = #{@id};") # new code
@@ -57,6 +71,20 @@ class Album
 
   def alphabetical
     DB.exec("SELECT * FROM songs ORDER BY name")
+  end
+
+  def artists
+    artists = []
+    results = DB.exec("SELECT artist_id FROM albums_artists WHERE album_id = #{@id};")
+    binding.pry
+    results.each do |result|
+      binding.pry
+      artist_id = result.fetch("artist_id").to_i()
+      artist = DB.exec("SELECT * FROM artists WHERE id = #{artist_id};")
+      name = artist.first().fetch("name")
+      artists.push(Artist.new({:name => name, :id => artist_id}))
+    end
+    artists
   end
 
 end
